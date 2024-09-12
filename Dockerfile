@@ -1,36 +1,20 @@
-# Use a specific tag for the base image for stability
-FROM python:3.9-alpine AS builder
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Create and activate a virtual environment
-RUN python3 -m venv venv
-ENV VIRTUAL_ENV=/app/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Copy requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Stage 2: Use a fresh base image for the runtime environment
-FROM python:3.9-alpine AS runner
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
 
-# Set the working directory
-WORKDIR /app
+# Define environment variable
+ENV NAME World
 
-# Copy virtual environment and application files from the builder stage
-COPY --from=builder /app/venv /app/venv
-COPY app.py /app/app.py
-COPY templates/ /app/templates/
-
-# Set environment variables
-ENV VIRTUAL_ENV=/app/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV FLASK_APP=/app/app.py
-
-# Expose the port for the application
-EXPOSE 8080
-
-# Start the application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "2", "app:app"]
+# Run app.py when the container launches
+CMD ["python", "app.py"]
