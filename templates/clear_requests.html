@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Requests</title>
+</head>
+<body>
+    <h1>Clear All Requests and Requesters</h1>
+    <form action="{{ url_for('clear_requests') }}" method="post">
+        <p>Are you sure you want to clear all requests and requesters from the inventory?</p>
+        <input type="submit" value="Clear Requests">
+        <a href="{{ url_for('index') }}">Cancel</a>
+    </form>
+</body>
+</html>

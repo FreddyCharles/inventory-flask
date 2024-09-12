@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            background-color: #003366; /* Navy blue */
+        }
+        h2 {
+            color: #003366; /* Navy blue */
+            border-bottom: 2px solid #003366; /* Navy blue */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            padding: 8px 12px;
+            background-color: #003366; /* Navy blue */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #002244; /* Darker navy blue */
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #fff;
+            background-color: #003366; /* Navy blue */
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a:hover {
+            background-color: #002244; /* Darker navy blue */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #003366; /* Navy blue */
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Inventory</h1>
+    <div class="container">
+
+        <!-- Inventory Table -->
+        <h2>Current Inventory</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Requests</th>
+                <th>Requesters</th>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['description'] }}</td>
+                <td>{{ item['type'] }}</td>
+                <td>{{ item['storage_location'] }}</td>
+                <td>{{ item['size'] }}</td>
+                <td>{{ item['quantity'] }}</td>
+                <td>{{ item['requests'] }}</td>
+                <td>{{ item['requesters'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Manage Inventory Forms -->
+        <h2>Add Item</h2>
+        <form action="{{ url_for('add_item') }}" method="post">
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description">
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type">
+            <label for="storage_location">Storage Location:</label>
+            <input type="text" id="storage_location" name="storage_location">
+            <label for="size">Size:</label>
+            <input type="text" id="size" name="size">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity">
+            <label for="requests">Number of Requests:</label>
+            <input type="number" id="requests" name="requests" value="0">
+            <label for="requesters">Requesters:</label>
+            <input type="text" id="requesters" name="requesters">
+            <input type="submit" value="Add Item">
+        </form>
+
+        <h2>Remove Item</h2>
+        <form action="{{ url_for('remove_item') }}" method="post">
+            <label for="item_id">Item ID:</label>
+            <input type="number" id="item_id" name="item_id">
+            <input type="submit" value="Remove Item">
+        </form>
+
+        <h2>Edit Item</h2>
+        <form action="{{ url_for('edit_item') }}" method="post">
+            <label for="item_id">Item ID:</label>
+            <input type="number" id="item_id" name="item_id">
+            <label for="type">Type:</label>
+            <input type="text" id="type" name="type">
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description">
+            <label for="storage_location">Storage Location:</label>
+            <input type="text" id="storage_location" name="storage_location">
+            <label for="size">Size:</label>
+            <input type="text" id="size" name="size">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity">
+            <label for="requests">Number of Requests:</label>
+            <input type="number" id="requests" name="requests">
+            <label for="requesters">Requesters:</label>
+            <input type="text" id="requesters" name="requesters">
+            <input type="submit" value="Edit Item">
+        </form>
+
+        <h2>Request Item</h2>
+        <form action="{{ url_for('request_item') }}" method="post">
+            <label for="item_id">Item ID:</label>
+            <input type="number" id="item_id" name="item_id">
+            <label for="requester_name">Your Name:</label>
+            <input type="text" id="requester_name" name="requester_name">
+            <input type="submit" value="Request Item">
+        </form>
+
+        <h2>Clear Requests</h2>
+        <form action="{{ url_for('clear_requests') }}" method="post">
+            <input type="submit" value="Clear All Requests">
+        </form>
+
+        <a href="{{ url_for('index') }}">Back to Inventory</a>
+    </div>
+</body>
+</html>
